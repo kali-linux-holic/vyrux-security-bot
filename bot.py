@@ -586,7 +586,24 @@ async def giveaway_cmd(ctx, duration: str, *, prize: str):
 
 # ----------------------------- RUN -----------------------------
 
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class KeepAlive(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is alive!")
+    def log_message(self, format, *args):
+        pass
+
+def run_server():
+    server = HTTPServer(("0.0.0.0", 8080), KeepAlive)
+    server.serve_forever()
+
 if __name__ == "__main__":
+    threading.Thread(target=run_server, daemon=True).start()
+
     token = os.getenv("TOKEN")
     if not token:
         try:
