@@ -598,7 +598,8 @@ class KeepAlive(BaseHTTPRequestHandler):
         pass
 
 def run_server():
-    server = HTTPServer(("0.0.0.0", 8080), KeepAlive)
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(("0.0.0.0", port), KeepAlive)
     server.serve_forever()
 
 if __name__ == "__main__":
